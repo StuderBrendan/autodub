@@ -16,5 +16,11 @@
     "file": "ratatouille_la-soupe.mp4",
     "thumbnail": "ratatouille_la-soupe.jpg",
     "duration": 104
+  },
+  {
+    "title": "Les Indestructibles - Syndrome",
+    "file": "indestructibles_syndrome.mp4",
+    "thumbnail": "indestructibles_syndrome.jpg",
+    "duration": 127
   }
 ]

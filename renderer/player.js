@@ -10,6 +10,8 @@ const title = params.get("title");
 const video = document.getElementById("video");
 const countdown = document.getElementById("countdown");
 
+const exportOverlay = document.getElementById("exportOverlay");
+
 document.getElementById("sceneTitle").innerText = title;
 
 video.src = "../media/videos/" + videoFile;
@@ -32,16 +34,25 @@ startBtn.onclick = async () => {
     video.play();
 
     video.onended = async () => {
-    const audioBlob = await stopRecording();
-    const audioPath = await saveRecordingWAV(audioBlob);
+        exportOverlay.style.display = "flex";
+        const audioBlob = await stopRecording();
+        const audioPath = await saveRecordingWAV(audioBlob);
 
-    const videoPath = path.join(__dirname, "../media/videos", videoFile);
-    const outputPath = path.join(__dirname, "../exports", "dub_" + Date.now() + ".mp4");
+        const videoPath = path.join(__dirname, "../media/videos", videoFile);
+        const outputPath = path.join(__dirname, "../exports", "dub_" + Date.now() + ".mp4");
 
-    await exportDub(videoPath, audioPath, outputPath);
+        try {
+        await exportDub(videoPath, audioPath, outputPath);
 
-    alert("Export finished!");
-};
+        exportOverlay.style.display = "none";
+
+        window.location = `playerResult.html?video=${encodeURIComponent(outputPath)}`;
+
+    } catch (err) {
+        exportOverlay.style.display = "none";
+        alert("Error during export: " + err.message);
+    }
+    };
 
 };
 

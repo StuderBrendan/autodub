@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dubbing Result</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="player-body">
+
+<div class="player-container">
+
+    <h2>Result</h2>
+
+    <video id="resultVideo" controls autoplay style="width:90%; max-width:1200px;"></video>
+
+    <div class="controls">
+        <button id="backBtn">Back to Menu</button>
+    </div>
+
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const videoPath = params.get("video");
+
+const video = document.getElementById("resultVideo");
+video.src = videoPath;
+
+document.getElementById("backBtn").onclick = () => {
+    window.location = "index.html";
+};
+</script>
+
+</body>
+</html>
