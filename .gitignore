@@ -146,4 +146,5 @@ dist
 /exports/**
 /media/thumbnails/**
 /media/videos/**
+/temp/**
 !**/.gitkeep

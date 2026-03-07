@@ -1,4 +1,6 @@
 const { exportDub } = require("../services/videoExporter");
+const path = require("path");
+const fs = require("fs");
 
 const params = new URLSearchParams(window.location.search);
 
@@ -30,23 +32,16 @@ startBtn.onclick = async () => {
     video.play();
 
     video.onended = async () => {
-        const audioBlob = await stopRecording();
-        const audioPath = await saveRecording(audioBlob);
+    const audioBlob = await stopRecording();
+    const audioPath = await saveRecordingWAV(audioBlob);
 
-        const videoPath = path.join(
-            __dirname,
-            "../media/videos",
-            videoFile
-        );
-        const outputPath = path.join(
-            __dirname,
-            "../exports",
-            "dub_" + Date.now() + ".mp4"
-        );
-        
-        await exportDub(videoPath, audioPath, outputPath);
-        alert("Export finished!");
-    };
+    const videoPath = path.join(__dirname, "../media/videos", videoFile);
+    const outputPath = path.join(__dirname, "../exports", "dub_" + Date.now() + ".mp4");
+
+    await exportDub(videoPath, audioPath, outputPath);
+
+    alert("Export finished!");
+};
 
 };
 
@@ -80,6 +75,13 @@ function runCountdown(seconds){
 
     });
 
+}
+
+async function saveRecordingWAV(blob) {
+    const buffer = Buffer.from(await blob.arrayBuffer());
+    const filePath = path.join(__dirname, "../temp/recording.wav");
+    fs.writeFileSync(filePath, buffer);
+    return filePath;
 }
 
 function saveAudio(blob){
