@@ -1,0 +1,176 @@
+body {
+    margin:0;
+    background:#141414;
+    color:white;
+    font-family:Arial;
+}
+
+/* top bar */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px 30px;
+
+    background:#0b0b0b;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.top-actions button{
+    background:#333;
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* content */
+
+main{
+    padding:30px;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+/* grid scenes */
+
+.scene-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,220px);
+
+    gap:20px;
+}
+
+/* card */
+
+.scene-card{
+
+    background:#1f1f1f;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    transition:transform 0.2s;
+}
+
+.scene-card:hover{
+    transform:scale(1.05);
+}
+
+/* thumbnail */
+
+.scene-thumb{
+
+    width:100%;
+    height:130px;
+
+    background:#333;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+}
+
+/* card info */
+
+.scene-info{
+    padding:10px;
+}
+
+.scene-title{
+    font-size:15px;
+    margin-bottom:4px;
+}
+
+.scene-duration{
+    font-size:12px;
+    color:#aaa;
+}
+
+.scene-thumb img{
+
+    width:100%;
+    height:130px;
+
+    object-fit:cover;
+}
+
+.player-body{
+    background:#000;
+    color:white;
+}
+
+.player-container{
+    text-align:center;
+    padding:30px;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 80%;
+    /*max-width: 1200px; /* optionnel : limite la largeur max */
+    margin: 0 auto;
+    aspect-ratio: 16 / 9; /* ratio classique film */
+    background: black;
+}
+
+.video-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* garde les proportions */
+    display: block;
+}
+
+.countdown{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    font-size:120px;
+
+    font-weight:bold;
+
+    color:red;
+
+    pointer-events:none;
+}
+
+.controls{
+    margin-top:20px;
+}
+
+.controls button{
+
+    padding:12px 20px;
+    margin:10px;
+
+    font-size:16px;
+
+    background:#333;
+    color:white;
+
+    border:none;
+    border-radius:6px;
+
+    cursor:pointer;
+}
