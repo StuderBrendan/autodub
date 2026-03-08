@@ -147,4 +147,5 @@ dist
 /media/thumbnails/**
 /media/videos/**
 /temp/**
+/DubLibrary
 !**/.gitkeep

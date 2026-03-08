@@ -14,7 +14,7 @@ const exportOverlay = document.getElementById("exportOverlay");
 
 document.getElementById("sceneTitle").innerText = title;
 
-video.src = "../media/videos/" + videoFile;
+video.src = videoFile;
 
 let isRecording = false;
 const startBtn = document.getElementById("startBtn");
@@ -56,7 +56,7 @@ startBtn.onclick = async () => {
         const audioBlob = await stopRecording();
         const audioPath = await saveRecordingWAV(audioBlob);
 
-        const videoPath = path.join(__dirname, "../media/videos", videoFile);
+        const videoPath = path.join(videoFile);
         const outputPath = path.join(__dirname, "../exports", "dub_" + Date.now() + ".mp4");
 
         try {

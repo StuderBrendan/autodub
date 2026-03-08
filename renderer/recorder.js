@@ -1,9 +1,16 @@
+const { loadConfig } = require("../services/configService");
+
 let audioContext;
 let recorder;
 let audioData = [];
+const config = loadConfig();
 
 async function startRecording() {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const stream = await navigator.mediaDevices.getUserMedia({
+        audio:{
+            deviceId: config.microphoneId
+        }
+    });
     
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const source = audioContext.createMediaStreamSource(stream);

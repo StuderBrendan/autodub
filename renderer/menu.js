@@ -1,40 +1,42 @@
-async function loadScenes(){
+const { loadScenes } = require("../services/sceneLoader");
+const path = require("path");
 
-    const response = await fetch("../scenes/scenes.json");
+const libraryPath = path.join(__dirname, "../DubLibrary");
+const scenes = loadScenes(libraryPath);
 
-    const scenes = await response.json();
+const grid = document.getElementById("sceneGrid");
 
-    const grid = document.getElementById("sceneGrid");
+document.getElementById("settingsBtn").onclick = () => {
 
-    scenes.forEach(scene => {
+    window.location = "settings.html";
 
-        const card = document.createElement("div");
+};
 
-        card.className = "scene-card";
+scenes.forEach(scene => {
 
-        card.innerHTML = `
-            <div class="scene-thumb">
-                <img src="../media/thumbnails/${scene.thumbnail}">
-            </div>
+    const card = document.createElement("div");
 
-            <div class="scene-info">
-                <div class="scene-title">${scene.title}</div>
-                <div class="scene-duration">${scene.duration}s</div>
-            </div>
-        `;
+    card.className = "scene-card";
 
-        card.onclick = () => {
+    card.innerHTML = `
+        <div class="scene-thumb">
+            <img src="${scene.thumbnail}">
+        </div>
 
-            const url = `player.html?video=${encodeURIComponent(scene.file)}&title=${encodeURIComponent(scene.title)}`;
+        <div class="scene-info">
+            <div class="scene-title">${scene.title}</div>
+            <div class="scene-duration">${scene.duration}s</div>
+        </div>
+    `;
 
-            window.location = url;
+    card.onclick = () => {
 
-        };
+        const url = `player.html?video=${encodeURIComponent(scene.video)}&title=${encodeURIComponent(scene.title)}`;
 
-        grid.appendChild(card);
+        window.location = url;
 
-    });
+    };
 
-}
+    grid.appendChild(card);
 
-loadScenes();
+});
