@@ -12,7 +12,8 @@
   "author": "Brendan Studer",
   "license": "MIT",
   "dependencies": {
-    "ffmpeg-static": "^5.2.0"
+    "ffmpeg-static": "^5.2.0",
+    "yt-dlp-static": "^1.0.6"
   },
   "devDependencies": {
     "electron": "^40.8.0",
@@ -29,7 +30,8 @@
       "package.json"
     ],
     "asarUnpack": [
-      "**/node_modules/ffmpeg-static/**"
+      "**/node_modules/ffmpeg-static/**",
+      "**/node_modules/yt-dlp-static/**"
     ],
     "directories": {
       "output": "dist"

@@ -1,4 +1,5 @@
 const { loadConfig, saveConfig } = require("../services/configService");
+const { importFromYoutube } = require("../services/youtubeImporter");
 const { ipcRenderer } = require("electron");
 
 window.onload = () => {
@@ -8,6 +9,10 @@ window.onload = () => {
 let config = loadConfig();
 
 const libraryInput = document.getElementById("libraryPath");
+const youtubeUrlInput = document.getElementById("youtubeUrl");
+const youtubeImportBtn = document.getElementById("importYoutubeBtn");
+const youtubeImportStatus = document.getElementById("youtubeImportStatus");
+
 const micSelect = document.getElementById("microphoneSelect");
 const testMicBtn = document.getElementById("testMicBtn");
 const meterLevel = document.getElementById("meterLevel");
@@ -120,6 +125,34 @@ document.getElementById("browseLibrary").onclick = async () => {
 
     if (folder) {
         libraryInput.value = folder;
+    }
+};
+
+youtubeImportBtn.onclick = async () => {
+    const url = youtubeUrlInput.value.trim();
+    const targetLibrary = libraryInput.value.trim();
+
+    if (!targetLibrary) {
+        youtubeImportStatus.textContent = "Choisis d'abord le dossier des extraits.";
+        return;
+    }
+
+    if (!url) {
+        youtubeImportStatus.textContent = "Colle une URL YouTube valide.";
+        return;
+    }
+
+    youtubeImportBtn.disabled = true;
+    youtubeImportStatus.textContent = "Import en cours...";
+
+    try {
+        const imported = await importFromYoutube(url, targetLibrary);
+        youtubeImportStatus.textContent = `Import termine: ${imported.title}`;
+        youtubeUrlInput.value = "";
+    } catch (err) {
+        youtubeImportStatus.textContent = "Erreur import: " + err.message;
+    } finally {
+        youtubeImportBtn.disabled = false;
     }
 };
 
