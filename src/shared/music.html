@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Background Music</title>
+</head>
+<body>
+<audio id="bgm" loop>
+    <source src="../assets/music/main.mp3" type="audio/mp3">
+</audio>
+
+<script>
+const { ipcRenderer } = require("electron");
+
+const audio = document.getElementById("bgm");
+audio.volume = 0.4;
+
+ipcRenderer.on("bgm-control", (_event, cmd) => {
+    if (!cmd || !cmd.type) return;
+
+    if (cmd.type === "play") {
+        if (typeof cmd.volume === "number") {
+            audio.volume = Math.max(0, Math.min(1, cmd.volume));
+        }
+        audio.play().catch(() => {});
+        return;
+    }
+
+    if (cmd.type === "pause") {
+        audio.pause();
+        return;
+    }
+
+    if (cmd.type === "set-volume") {
+        if (typeof cmd.volume === "number") {
+            audio.volume = Math.max(0, Math.min(1, cmd.volume));
+        }
+    }
+});
+</script>
+</body>
+</html>

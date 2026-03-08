@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Resultat du doublage</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<link rel="stylesheet" href="../shared/global.css">
+<link rel="stylesheet" href="playerResult.css">
+</head>
+<body class="result-body">
+
+<header class="result-header">
+    <button id="backBtn" class="back-btn">Retour menu</button>
+    <h1>Resultat du doublage</h1>
+</header>
+
+<main class="result-main">
+    <section class="score-card" id="scoreCard">
+        <p class="score-label">Performance</p>
+
+        <div class="score-line">
+            <div id="scoreValue" class="score-value">0</div>
+            <div class="score-max">/100</div>
+        </div>
+
+        <div class="meter-wrap">
+            <div id="scoreMeter" class="score-meter"></div>
+        </div>
+
+        <p id="scoreGrade" class="score-grade">Analyse...</p>
+        <div id="stars" class="stars">*....</div>
+    </section>
+
+    <section class="video-card">
+        <video id="resultVideo" controls autoplay></video>
+
+        <div class="actions-row">
+            <button id="retryBtn">Recommencer</button>
+            <button id="exportBtn">Exporter le resultat</button>
+        </div>
+
+        <p id="exportStatus" class="export-status"></p>
+    </section>
+</main>
+
+<script src="playerResult.js"></script>
+
+</body>
+</html>

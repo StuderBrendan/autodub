@@ -1,0 +1,14 @@
+:root{
+
+--bg:#1E1E1E;
+--button:#804BCD;
+--text:white;
+
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+font-family:sans-serif;
+margin:0;
+}
