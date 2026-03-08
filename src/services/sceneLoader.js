@@ -26,6 +26,8 @@ function loadScenes(libraryPath) {
         scenes.push({
             title: metadata.title,
             duration: metadata.duration,
+            voices: metadata.voices || 1,
+            difficulty: metadata.difficulty || "Normal",
             video,
             thumbnail
         });
