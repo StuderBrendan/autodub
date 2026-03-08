@@ -1,11 +1,27 @@
 const { ipcRenderer } = require("electron");
 
 const items = document.querySelectorAll(".menu-item");
+const muteBtn = document.getElementById("muteBtn");
 
 let index = 0;
 
-window.onload = () => {
+function updateMuteLabel(state) {
+    const muted = !!state.muted;
+    muteBtn.textContent = String.fromCodePoint(muted ? 0x1F507 : 0x1F50A);
+    muteBtn.setAttribute("aria-label", muted ? "Activer la musique" : "Couper la musique");
+    muteBtn.title = muted ? "Activer la musique" : "Couper la musique";
+}
+
+window.onload = async () => {
     ipcRenderer.send("bgm-play", { volume: 0.4 });
+
+    const state = await ipcRenderer.invoke("bgm-get-state");
+    updateMuteLabel(state);
+};
+
+muteBtn.onclick = async () => {
+    const state = await ipcRenderer.invoke("bgm-toggle-mute");
+    updateMuteLabel(state);
 };
 
 function updateSelection() {

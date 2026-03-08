@@ -14,6 +14,7 @@ const title = params.get("title") || "Scene";
 const video = document.getElementById("video");
 const countdown = document.getElementById("countdown");
 const exportOverlay = document.getElementById("exportOverlay");
+const videoInteractionBlocker = document.getElementById("videoInteractionBlocker");
 
 const startBtn = document.getElementById("startBtn");
 const backBtn = document.getElementById("backBtn");
@@ -26,6 +27,13 @@ document.getElementById("sceneTitle").innerText = title;
 function toFileUrl(filePath) {
     return `file:///${filePath.replace(/\\/g, "/")}`;
 }
+
+if (videoInteractionBlocker) {
+    videoInteractionBlocker.addEventListener("mousedown", e => e.preventDefault());
+    videoInteractionBlocker.addEventListener("click", e => e.preventDefault());
+}
+
+video.setAttribute("tabindex", "-1");
 
 async function getRuntimePaths() {
     if (!runtimePathsPromise) {

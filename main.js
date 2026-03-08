@@ -5,6 +5,8 @@ const path = require("path");
 let mainWindow;
 let musicWindow;
 let musicReady = false;
+let bgmMuted = false;
+let bgmVolume = 0.4;
 const pendingMusicCommands = [];
 
 function getRuntimePaths() {
@@ -16,6 +18,10 @@ function getRuntimePaths() {
     fs.mkdirSync(exportsDir, { recursive: true });
 
     return { baseDir, tempDir, exportsDir };
+}
+
+function getBgmState() {
+    return { muted: bgmMuted, volume: bgmVolume };
 }
 
 ipcMain.handle("select-folder", async () => {
@@ -30,6 +36,22 @@ ipcMain.handle("select-folder", async () => {
 
 ipcMain.handle("get-runtime-paths", async () => {
     return getRuntimePaths();
+});
+
+ipcMain.handle("bgm-get-state", async () => {
+    return getBgmState();
+});
+
+ipcMain.handle("bgm-toggle-mute", async () => {
+    bgmMuted = !bgmMuted;
+
+    if (bgmMuted) {
+        sendBgmCommand({ type: "pause" });
+    } else {
+        sendBgmCommand({ type: "play", volume: bgmVolume });
+    }
+
+    return getBgmState();
 });
 
 ipcMain.handle("save-video", async (_event, sourcePath) => {
@@ -96,6 +118,12 @@ function createMusicWindow() {
             const cmd = pendingMusicCommands.shift();
             musicWindow.webContents.send("bgm-control", cmd);
         }
+
+        if (bgmMuted) {
+            sendBgmCommand({ type: "pause" });
+        } else {
+            sendBgmCommand({ type: "play", volume: bgmVolume });
+        }
     });
 
     musicWindow.on("closed", () => {
@@ -116,7 +144,16 @@ function sendBgmCommand(cmd) {
 }
 
 ipcMain.on("bgm-play", (_event, options = {}) => {
-    sendBgmCommand({ type: "play", ...options });
+    if (typeof options.volume === "number") {
+        bgmVolume = Math.max(0, Math.min(1, options.volume));
+    }
+
+    if (bgmMuted) {
+        sendBgmCommand({ type: "pause" });
+        return;
+    }
+
+    sendBgmCommand({ type: "play", volume: bgmVolume });
 });
 
 ipcMain.on("bgm-pause", () => {
@@ -124,7 +161,11 @@ ipcMain.on("bgm-pause", () => {
 });
 
 ipcMain.on("bgm-set-volume", (_event, volume) => {
-    sendBgmCommand({ type: "set-volume", volume });
+    if (typeof volume === "number") {
+        bgmVolume = Math.max(0, Math.min(1, volume));
+    }
+
+    sendBgmCommand({ type: "set-volume", volume: bgmVolume });
 });
 
 app.whenReady().then(() => {
