@@ -238,6 +238,31 @@ function buildVideoAttempts(url, sceneFolder, formatId) {
     const outputTpl = path.join(sceneFolder, "video.%(ext)s");
     const attempts = [];
 
+    attempts.push(
+        {
+            label: "1080p mp4+m4a",
+            args: [
+                "--no-playlist",
+                "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio",
+                "--merge-output-format", "mp4",
+                "-o", outputTpl,
+                url
+            ]
+        },
+        {
+            label: "1080p android",
+            args: [
+                "--no-playlist",
+                "--extractor-args", "youtube:player_client=android",
+                "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]",
+                "--merge-output-format", "mp4",
+                "-o", outputTpl,
+                url
+            ]
+        }
+    );
+
+
     if (formatId) {
         attempts.push({
             label: `format_id=${formatId}`,
