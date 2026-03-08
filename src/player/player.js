@@ -19,11 +19,20 @@ const startBtn = document.getElementById("startBtn");
 const backBtn = document.getElementById("backBtn");
 
 let isRecording = false;
+let runtimePathsPromise = null;
 
 document.getElementById("sceneTitle").innerText = title;
 
 function toFileUrl(filePath) {
     return `file:///${filePath.replace(/\\/g, "/")}`;
+}
+
+async function getRuntimePaths() {
+    if (!runtimePathsPromise) {
+        runtimePathsPromise = ipcRenderer.invoke("get-runtime-paths");
+    }
+
+    return runtimePathsPromise;
 }
 
 if (!videoFile) {
@@ -62,13 +71,10 @@ startBtn.onclick = async () => {
         exportOverlay.style.display = "flex";
 
         try {
+            const runtimePaths = await getRuntimePaths();
             const audioBlob = await stopRecording();
-            const audioPath = await saveRecordingWAV(audioBlob);
-
-            const outputDir = path.join(__dirname, "../../exports");
-            const outputPath = path.join(outputDir, "dub_" + Date.now() + ".mp4");
-
-            fs.mkdirSync(outputDir, { recursive: true });
+            const audioPath = await saveRecordingWAV(audioBlob, runtimePaths.tempDir);
+            const outputPath = path.join(runtimePaths.exportsDir, "dub_" + Date.now() + ".mp4");
 
             const scoreResult = await scorePerformance(videoFile, audioPath);
 
@@ -131,9 +137,8 @@ function runCountdown(seconds) {
     });
 }
 
-async function saveRecordingWAV(blob) {
+async function saveRecordingWAV(blob, tempDir) {
     const buffer = Buffer.from(await blob.arrayBuffer());
-    const tempDir = path.join(__dirname, "../../temp");
 
     fs.mkdirSync(tempDir, { recursive: true });
 

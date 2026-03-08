@@ -7,6 +7,17 @@ let musicWindow;
 let musicReady = false;
 const pendingMusicCommands = [];
 
+function getRuntimePaths() {
+    const baseDir = app.getPath("userData");
+    const tempDir = path.join(baseDir, "temp");
+    const exportsDir = path.join(baseDir, "exports");
+
+    fs.mkdirSync(tempDir, { recursive: true });
+    fs.mkdirSync(exportsDir, { recursive: true });
+
+    return { baseDir, tempDir, exportsDir };
+}
+
 ipcMain.handle("select-folder", async () => {
     const result = await dialog.showOpenDialog({
         properties: ["openDirectory"]
@@ -15,6 +26,10 @@ ipcMain.handle("select-folder", async () => {
     if (result.canceled) return null;
 
     return result.filePaths[0];
+});
+
+ipcMain.handle("get-runtime-paths", async () => {
+    return getRuntimePaths();
 });
 
 ipcMain.handle("save-video", async (_event, sourcePath) => {
