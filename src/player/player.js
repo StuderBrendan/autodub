@@ -1,5 +1,6 @@
 const { ipcRenderer } = require("electron");
 const { exportDub } = require("../services/videoExporter");
+const { scorePerformance } = require("../services/performanceScorer");
 const path = require("path");
 const fs = require("fs");
 
@@ -69,10 +70,12 @@ startBtn.onclick = async () => {
 
             fs.mkdirSync(outputDir, { recursive: true });
 
+            const scoreResult = await scorePerformance(videoFile, audioPath);
+
             await exportDub(videoFile, audioPath, outputPath);
 
             exportOverlay.style.display = "none";
-            window.location = `../result/playerResult.html?video=${encodeURIComponent(outputPath)}&source=${encodeURIComponent(videoFile)}&title=${encodeURIComponent(title)}`;
+            window.location = `../result/playerResult.html?video=${encodeURIComponent(outputPath)}&source=${encodeURIComponent(videoFile)}&title=${encodeURIComponent(title)}&score=${encodeURIComponent(scoreResult.score)}&corr=${encodeURIComponent(scoreResult.details.correlation)}&overlap=${encodeURIComponent(scoreResult.details.overlap)}&dur=${encodeURIComponent(scoreResult.details.durationSimilarity)}`;
         } catch (err) {
             exportOverlay.style.display = "none";
             alert("Error during export: " + err.message);
@@ -134,7 +137,7 @@ async function saveRecordingWAV(blob) {
 
     fs.mkdirSync(tempDir, { recursive: true });
 
-    const filePath = path.join(tempDir, "recording.wav");
+    const filePath = path.join(tempDir, `recording_${Date.now()}.wav`);
     fs.writeFileSync(filePath, buffer);
     return filePath;
 }

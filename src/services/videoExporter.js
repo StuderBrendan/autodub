@@ -1,25 +1,25 @@
-const { exec } = require("child_process");
-const path = require("path");
+const { execFile } = require("child_process");
+const { ffmpegPath } = require("./ffmpegPath");
 
-function exportDub(videoPath, audioPath, outputPath){
+function exportDub(videoPath, audioPath, outputPath) {
+    return new Promise((resolve, reject) => {
+        const args = [
+            "-y",
+            "-i", videoPath,
+            "-i", audioPath,
+            "-filter_complex", "amix=inputs=2",
+            outputPath
+        ];
 
-    return new Promise((resolve, reject)=>{
-
-        const command =
-        `ffmpeg -y -i "${videoPath}" -i "${audioPath}" -filter_complex amix=inputs=2 "${outputPath}"`;
-
-        exec(command,(err,stdout,stderr)=>{
-
-            if(err){
+        execFile(ffmpegPath, args, { windowsHide: true }, err => {
+            if (err) {
                 reject(err);
-            }else{
-                resolve();
+                return;
             }
 
+            resolve();
         });
-
     });
-
 }
 
 module.exports = { exportDub };

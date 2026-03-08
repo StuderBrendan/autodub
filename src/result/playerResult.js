@@ -7,6 +7,11 @@ const resultVideoPath = params.get("video");
 const sourceVideoPath = params.get("source");
 const sourceTitle = params.get("title") || "Scene";
 
+const rawScore = Number(params.get("score"));
+const correlation = params.get("corr");
+const overlap = params.get("overlap");
+const durationSimilarity = params.get("dur");
+
 const resultVideo = document.getElementById("resultVideo");
 const scoreValue = document.getElementById("scoreValue");
 const scoreMeter = document.getElementById("scoreMeter");
@@ -27,6 +32,12 @@ function hashString(input) {
         h |= 0;
     }
     return Math.abs(h);
+}
+
+function getFallbackScore() {
+    const base = hashString(`${sourceTitle}|${resultVideoPath}`) % 31;
+    const durationBoost = Math.min(12, Math.round((resultVideo.duration || 0) / 6));
+    return Math.min(100, 62 + base + durationBoost);
 }
 
 function getGradeInfo(score) {
@@ -66,6 +77,21 @@ function animateScore(targetScore) {
     requestAnimationFrame(frame);
 }
 
+function renderScore() {
+    const score = Number.isFinite(rawScore) && rawScore > 0 ? rawScore : getFallbackScore();
+    const grade = getGradeInfo(score);
+
+    scoreGrade.textContent = grade.text;
+    scoreGrade.className = `score-grade ${grade.className}`;
+
+    animateScore(score);
+    setTimeout(() => renderStars(grade.stars), 300);
+
+    if (correlation && overlap && durationSimilarity) {
+        exportStatus.textContent = `Analyse audio - correlation: ${correlation}, overlap: ${overlap}, duree: ${durationSimilarity}`;
+    }
+}
+
 if (!resultVideoPath) {
     exportStatus.textContent = "Resultat introuvable.";
     exportBtn.disabled = true;
@@ -74,23 +100,11 @@ if (!resultVideoPath) {
     resultVideo.src = toFileUrl(resultVideoPath);
 }
 
-resultVideo.addEventListener("loadedmetadata", () => {
-    const base = hashString(`${sourceTitle}|${resultVideoPath}`) % 31;
-    const durationBoost = Math.min(12, Math.round((resultVideo.duration || 0) / 6));
-    const score = Math.min(100, 62 + base + durationBoost);
-
-    const grade = getGradeInfo(score);
-
-    scoreGrade.textContent = grade.text;
-    scoreGrade.className = `score-grade ${grade.className}`;
-
-    animateScore(score);
-    setTimeout(() => renderStars(grade.stars), 300);
-});
+resultVideo.addEventListener("loadedmetadata", renderScore);
 
 document.getElementById("backBtn").onclick = () => {
     ipcRenderer.send("bgm-play", { volume: 0.4 });
-    window.location = "../menu/menu.html";
+    window.location = "../library/library.html";
 };
 
 retryBtn.onclick = () => {
