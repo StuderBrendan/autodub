@@ -16,14 +16,29 @@ document.getElementById("sceneTitle").innerText = title;
 
 video.src = "../media/videos/" + videoFile;
 
+let isRecording = false;
 const startBtn = document.getElementById("startBtn");
 const backBtn = document.getElementById("backBtn");
 
+video.addEventListener("loadeddata", () => {
+
+    console.log("Video ready");
+
+    startBtn.disabled = false;
+
+});
+
 backBtn.onclick = () => {
+    if (isRecording) return;
     window.location = "index.html";
 };
 
 startBtn.onclick = async () => {
+
+    if (isRecording) return;
+    isRecording = true;
+    startBtn.disabled = true;
+    backBtn.disabled = true;
 
     await runCountdown(5);
 
@@ -34,6 +49,9 @@ startBtn.onclick = async () => {
     video.play();
 
     video.onended = async () => {
+        isRecording = false;
+        startBtn.disabled = false;
+        backBtn.disabled = false;
         exportOverlay.style.display = "flex";
         const audioBlob = await stopRecording();
         const audioPath = await saveRecordingWAV(audioBlob);
@@ -56,6 +74,29 @@ startBtn.onclick = async () => {
 
 };
 
+function playBeep() {
+
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = 880;
+
+    gain.gain.value = 0.2;
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    setTimeout(() => {
+        oscillator.stop();
+        ctx.close();
+    }, 150);
+}
+
 function runCountdown(seconds){
 
     return new Promise(resolve => {
@@ -63,6 +104,8 @@ function runCountdown(seconds){
         let count = seconds;
 
         countdown.innerText = count;
+
+        playBeep();
 
         const interval = setInterval(() => {
 
@@ -72,13 +115,20 @@ function runCountdown(seconds){
 
                 clearInterval(interval);
 
-                countdown.innerText = "";
+                countdown.innerText = "GO";
 
-                resolve();
+                playBeep();
+
+                setTimeout(()=>{
+                    countdown.innerText = "";
+                    resolve();
+                },500);
 
             }else{
 
                 countdown.innerText = count;
+
+                playBeep();
 
             }
 

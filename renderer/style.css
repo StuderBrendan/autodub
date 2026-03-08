@@ -1,8 +1,15 @@
+:root {
+    --bg-color: #1E1E1E;
+    --primary: #804BCD;
+    --primary-hover: #9966e0;
+    --text-color: #ffffff;
+}
+
 body {
-    margin:0;
-    background:#141414;
-    color:white;
-    font-family:Arial;
+    margin: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* top bar */
@@ -22,13 +29,31 @@ body {
     font-weight:bold;
 }
 
-.top-actions button{
-    background:#333;
-    color:white;
-    border:none;
-    padding:10px 16px;
-    border-radius:6px;
-    cursor:pointer;
+button {
+
+    background: var(--primary);
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 20px;
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+
+    background: var(--primary-hover);
+}
+
+button:disabled {
+
+    background: #555;
+    cursor: not-allowed;
 }
 
 /* content */
@@ -54,21 +79,23 @@ h2{
 
 /* card */
 
-.scene-card{
+.scene-card {
 
-    background:#1f1f1f;
+    background: #2a2a2a;
+    border-radius: 10px;
 
-    border-radius:10px;
+    overflow: hidden;
 
-    overflow:hidden;
+    cursor: pointer;
 
-    cursor:pointer;
-
-    transition:transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.scene-card:hover{
-    transform:scale(1.05);
+.scene-card:hover {
+
+    transform: scale(1.05);
+
+    box-shadow: 0 0 12px rgba(128,75,205,0.6);
 }
 
 /* thumbnail */
@@ -157,22 +184,6 @@ h2{
 
 .controls{
     margin-top:20px;
-}
-
-.controls button{
-
-    padding:12px 20px;
-    margin:10px;
-
-    font-size:16px;
-
-    background:#333;
-    color:white;
-
-    border:none;
-    border-radius:6px;
-
-    cursor:pointer;
 }
 
 .export-overlay {
