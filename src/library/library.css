@@ -72,7 +72,7 @@ main{
     position:absolute;
     top:50%;
     left:50%;
-    width:360px;
+    width:390px;
     background:#232323;
     border:1px solid #343434;
     border-radius:14px;
@@ -88,15 +88,61 @@ main{
 }
 
 .scene-thumb{
+    position:relative;
     width:100%;
-    height:210px;
+    height:230px;
     background:#333;
+    overflow:hidden;
 }
 
-.scene-thumb img{
+.scene-thumb img,
+.scene-thumb video{
     width:100%;
     height:100%;
     object-fit:cover;
+}
+
+.scene-thumb img{
+    transition:opacity 0.22s ease;
+}
+
+.scene-thumb video{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    transition:opacity 0.22s ease;
+    background:#111;
+}
+
+.scene-card.selected.preview-ready .scene-thumb img{
+    opacity:0;
+}
+
+.scene-card.selected.preview-ready .scene-thumb video{
+    opacity:1;
+}
+
+.scene-preview-badge{
+    position:absolute;
+    left:12px;
+    bottom:12px;
+    z-index:2;
+    background:rgba(10,10,10,0.72);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:999px;
+    padding:5px 10px;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#f5f5f5;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity 0.22s ease, transform 0.22s ease;
+}
+
+.scene-card.selected.preview-ready .scene-preview-badge{
+    opacity:1;
+    transform:translateY(0);
 }
 
 .scene-info{
@@ -104,7 +150,7 @@ main{
 }
 
 .scene-title{
-    font-size:20px;
+    font-size:22px;
     margin-bottom:10px;
     font-weight:600;
 }
@@ -116,7 +162,7 @@ main{
 }
 
 .meta-pill{
-    font-size:14px;
+    font-size:15px;
     color:#d8d8d8;
     background:#2f2f2f;
     border:1px solid #3c3c3c;
@@ -142,10 +188,10 @@ main{
     }
 
     .scene-card{
-        width:300px;
+        width:330px;
     }
 
     .scene-thumb{
-        height:176px;
+        height:190px;
     }
 }
